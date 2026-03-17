@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıtları Excel Olarak İndir | Eğitimde Dönüşüm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --border: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            padding: 32px;
+            border: 1px solid var(--border);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 { color: var(--primary); font-size: 20px; margin-bottom: 8px; }
+        p { color: #64748b; font-size: 14px; margin-bottom: 24px; }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover { background-color: var(--primary-hover); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .message { margin-top: 16px; font-size: 14px; padding: 12px; border-radius: 8px; display: none; }
+        .message.success { background: #f0fdf4; color: #166534; display: block; }
+        .message.error { background: #fef2f2; color: #b91c1c; display: block; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Kayıtları Excel Olarak İndir</h1>
+        <p>Supabase'deki tüm kayıtlar (Okul Adı, Ad Soyad, Branş, Telefon, Oturum 1 Atölye, Oturum 2 Atölye) Excel dosyasına aktarılır.</p>
+        <button type="button" id="excelBtn">Excel İndir</button>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <script>
+        (function () {
+            var SUPABASE_URL = 'https://qpioyavodwtdlffhsceg.supabase.co';
+            var SUPABASE_ANON_KEY = 'sb_publishable_F3HKCA2SsrIYg099dS5AxA_TitAkz-j';
+
+            function showMessage(el, text, isError) {
+                el.textContent = text;
+                el.className = 'message ' + (isError ? 'error' : 'success');
+                el.style.display = 'block';
+            }
+
+            document.getElementById('excelBtn').addEventListener('click', async function () {
+                var btn = this;
+                var msgEl = document.getElementById('message');
+                msgEl.className = 'message';
+                msgEl.textContent = '';
+                msgEl.style.display = 'none';
+
+                if (typeof window.supabase === 'undefined') {
+                    showMessage(msgEl, 'Supabase yüklenemedi. Bu sayfayı dosyadan (file://) açıyorsanız çalışmaz. Lütfen projeyi Vercel\'de yayınlayıp oradan excel-indir.html adresini açın veya yerel sunucu kullanın (örn. Live Server).', true);
+                    return;
+                }
+                if (typeof XLSX === 'undefined') {
+                    showMessage(msgEl, 'Excel kütüphanesi yüklenemedi. İnternet bağlantınızı kontrol edin veya sayfayı Vercel üzerinden açın.', true);
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.textContent = 'Yükleniyor...';
+
+                try {
+                    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    var res = await supabase
+                        .from('kayitlar')
+                        .select('okul_adi, ad_soyad, brans, telefon, oturum_1_atolye, oturum_2_atolye');
+
+                    if (res.error) throw res.error;
+                    var data = res.data || [];
+
+                    var rows = data.map(function (r) {
+                        return {
+                            'Okul Adı': r.okul_adi || '',
+                            'Ad Soyad': r.ad_soyad || '',
+                            'Branş': r.brans || '',
+                            'Telefon': r.telefon || '',
+                            'Oturum 1 Atölye': r.oturum_1_atolye || '',
+                            'Oturum 2 Atölye': r.oturum_2_atolye || ''
+                        };
+                    });
+
+                    if (rows.length === 0) {
+                        showMessage(msgEl, 'Henüz kayıt bulunamadı.', true);
+                        btn.disabled = false;
+                        btn.textContent = 'Excel İndir';
+                        return;
+                    }
+
+                    var worksheet = XLSX.utils.json_to_sheet(rows);
+                    var workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, worksheet, 'Kayitlar');
+                    var tarih = new Date().toISOString().slice(0, 10);
+                    XLSX.writeFile(workbook, 'egitimde-donusum-kayitlar_' + tarih + '.xlsx');
+
+                    showMessage(msgEl, rows.length + ' kayıt Excel dosyası olarak indirildi.', false);
+                } catch (err) {
+                    showMessage(msgEl, 'Hata: ' + (err.message || String(err)), true);
+                }
+
+                btn.disabled = false;
+                btn.textContent = 'Excel İndir';
+            });
+        })();
+    </script>
+</body>
+</html>
