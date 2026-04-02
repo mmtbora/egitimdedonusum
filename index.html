@@ -3,317 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eğitimde Dönüşüm | Kayıt Formu</title>
+    <title>Eğitimde Dönüşüm | Başvuru sona erdi</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
-            --primary: #4f46e5; --primary-hover: #4338ca; --bg: #f8fafc;
-            --card-bg: #ffffff; --text-main: #1e293b; --text-muted: #64748b;
-            --error: #ef4444; --border: #e2e8f0;
+            --primary: #4f46e5;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; padding: 20px; min-height: 100vh; }
-        .container { width: 100%; max-width: 500px; }
-        .card { background: var(--card-bg); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); padding: 32px; border: 1px solid var(--border); }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: var(--primary); font-size: 24px; font-weight: 700; margin-bottom: 8px; }
-        
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-        .input-group label span { color: var(--error); margin-left: 4px; }
-        
-        input[type="text"], select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 15px; font-family: inherit; }
-        input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
-        .field-error { border-color: var(--error) !important; background-color: #fffafb; }
-
-        /* KVKK Checkbox Tasarımı */
-        .checkbox-group { display: flex; align-items: flex-start; gap: 12px; margin: 24px 0; padding: 12px; background: #f1f5f9; border-radius: 8px; border: 1px solid var(--border); }
-        .checkbox-group input { width: 18px; height: 18px; cursor: pointer; margin-top: 2px; }
-        .checkbox-group label { font-size: 13px; line-height: 1.4; color: var(--text-main); font-weight: 400; cursor: pointer; }
-        .kvkk-link { color: var(--primary); font-weight: 600; text-decoration: underline; cursor: pointer; }
-
-        /* MODAL (KVKK Metni İçin) */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
-        .modal-content { background: white; margin: 10% auto; padding: 24px; width: 90%; max-width: 450px; border-radius: 12px; max-height: 70vh; overflow-y: auto; position: relative; }
-        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer; color: var(--text-muted); }
-
-        .error-box { background-color: #fef2f2; border: 1px solid #fee2e2; color: var(--error); padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; margin-bottom: 20px; display: none; text-align: center; }
-        button { width: 100%; padding: 14px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        button:hover { background-color: var(--primary-hover); }
-        button:disabled { opacity: 0.6; cursor: not-allowed; }
-        /* A4: 210×297 mm ≈ 794×1123 px @ 96dpi */
-        #pdf-template {
-    width: 794px;
-    min-width: 794px;
-    max-width: 794px;
-    min-height: 1123px;
-    background: white;
-    margin: 0 auto;
-    box-sizing: border-box;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    overflow: visible;
-}
-    #pdf-template p, #pdf-template span { word-wrap: break-word; overflow-wrap: break-word; }
-    #pdf-logos { display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 16px; }
-    #pdf-logos img { width: 100px; height: 100px; object-fit: contain; display: block; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            min-height: 100vh;
+        }
+        .container { width: 100%; max-width: 520px; }
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 40px 32px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .card h1 {
+            color: var(--primary);
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: 0.02em;
+        }
+        .card p {
+            font-size: 17px;
+            line-height: 1.6;
+            font-weight: 500;
+            color: var(--text-main);
+        }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="card">
-        <div class="header">
+    <div class="container">
+        <div class="card">
             <h1>EĞİTİMDE DÖNÜŞÜM</h1>
-            <p>Atölye Seçim Formu</p>
-        </div>
-
-        <form id="workshopForm" novalidate>
-            <div class="input-group">
-                <label>Görev Yaptığınız Okul <span>*</span></label>
-                <input type="text" id="okul_adi" placeholder="Okulunuzun adı">
-            </div>
-
-            <div class="input-group">
-                <label>Ad Soyad <span>*</span></label>
-                <input type="text" id="ad_soyad" placeholder="Ad Soyad">
-            </div>
-
-            <div class="input-group">
-                <label>Branş <span>*</span></label>
-                <input type="text" id="brans" placeholder="Branşınız">
-            </div>
-
-            <div class="input-group">
-                <label>Telefon Numarası <span>*</span></label>
-                <input type="tel" id="telefon" placeholder="05XX XXX XX XX">
-            </div>
-
-            <div class="input-group">
-                <label>1. Oturum Atölye Seçimi 13:15 - 14:45 <span>*</span></label>
-                <select id="oturum_1"><option value="">Seçiniz...</option></select>
-            </div>
-
-            <div class="input-group">
-                <label>2. Oturum Atölye Seçimi 15:00 - 16:30 <span>*</span></label>
-                <select id="oturum_2"><option value="">Seçiniz...</option></select>
-            </div>
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="kvkk_onay">
-                <label for="kvkk_onay">
-                    <span class="kvkk-link" id="kvkk_btn">KVKK Aydınlatma Metni</span> ve Açık Rıza Beyanı'nı okudum, kabul ediyorum. <span>*</span>
-                </label>
-            </div>
-
-            <div id="error-message" class="error-box"></div>
-            <button type="submit" id="submitBtn">Kaydı Tamamla</button>
-        </form>
-    </div>
-</div>
-
-<div id="kvkk_modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" id="close_modal">&times;</span>
-        <h3 style="margin-bottom: 15px;">KVKK Aydınlatma Metni</h3>
-        <div style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
-            <p><strong>Veri Sorumlusu:</strong> Eğitimde Dönüşüm Organizasyonu</p><br>
-            <p>Bu form aracılığıyla toplanan Ad-Soyad, Okul, Branş ve Telefon Numarası verileriniz, atölye kontenjanlarının yönetilmesi, katılım belgelerinizin oluşturulması ve gerektiğinde sizinle iletişime geçilmesi amacıyla 6698 sayılı KVKK kapsamında Supabase'in yurtdışı serverlarında tutularak işlenmektedir.</p><br>
-            <p>Verileriniz üçüncü şahıslarla paylaşılmayacak, herhangibir ticari faaliyette kullanılmayacak ve etkinlik sonunda silinecektir.</p>
+            <p>Atölyelere başvuru süreci tamamlanmıştır. İlginiz için teşekkür ederiz.</p>
         </div>
     </div>
-</div>
-
-<div id="pdf-wrapper" style="position: absolute; left: -9999px; top: 0;">
-    <div id="pdf-template" style="padding: 20px; border: 10px solid #4f46e5; border-radius: 12px; font-family: sans-serif; box-sizing: border-box; width: 794px; min-height: 1123px;">
-        <div id="pdf-logos">
-            <img src="assets/1.jpg" alt="Logo 1" width="100" height="100">
-            <img src="assets/2.jpg" alt="Logo 2" width="100" height="100">
-            <img src="assets/3.jpg" alt="Logo 3" width="100" height="100">
-            <img src="assets/4.jpg" alt="Logo 4" width="100" height="100">
-        </div>
-        <h1 style="text-align: center; color: #4f46e5;">EĞİTİMDE DÖNÜŞÜM KONFERANS VE ATÖLYELERİ KAYIT ONAY BELGESİ</h1>
-        <hr> <br>
-        <p><strong>Katılımcı:</strong> <span id="pdf_ad"></span></p> <br>
-        <p><strong>Okul:</strong> <span id="pdf_okul"></span></p> <br> <br>
-        <p><strong>Oturum No:1 Atölyeniz 13:15 - 14:45:</strong> <span id="pdf_o1"></span></p> <br>
-        <p><strong>Oturum No:2 Atölyeniz 15:00 - 16:30:</strong> <span id="pdf_o2"></span></p> <br> <br> <br>
-        <p><strong>Tarih:</strong> 04 NİSAN 2026  CUMARTESİ  <strong>YER:</strong> ALİYA İZZETBEGOVİÇ KIZ AİHL</p> <br> <br>
-        <p style="margin-top: 20px; font-size: 12px;">Bu belge sistem tarafından otomatik olarak oluşturulmuştur. Kayıt Tarihi: <span id="pdf_tarih"></span></p>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-    const SUPABASE_URL = 'https://qpioyavodwtdlffhsceg.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_F3HKCA2SsrIYg099dS5AxA_TitAkz-j';
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const KONTENJAN_LIMIT = 20;
-    const atolyeler = ["1-Eğitimde Duygusal Bağın İnşası (Sadece Bayan Öğretmenler İçindir)", "2-Öğretmenin Tasarım Asistanı: CANVA", "3-Yeni Nesil Öğrenciler ve Modern Öğretmenlik Yaklaşımları", "4-Etkinliklerle Siyer Öğretimi Yöntemleri Teknikleri (Sadece Bayan Öğretmenler İçindir)", "5-Eğitimcinin İmaj Yönetimi", "6-Oyun ve Etkinliklerle Din Öğretimi (Sadece Bayan Öğretmenler İçindir)", "7-Etkili İletişimde Beden Dili", "8-Eğitim Öğretimde Akıl Oyunları Kullanımı", "9-Eğitim Öğretimde Yapay Zeka Kullanımı", "10-Öğretmenler İçin Tükenmişlikten Güçlenmeye"];
-
-
-    
-
-
-
-    // Modal Kontrolü
-    const modal = document.getElementById("kvkk_modal");
-    document.getElementById("kvkk_btn").onclick = () => modal.style.display = "block";
-    document.getElementById("close_modal").onclick = () => modal.style.display = "none";
-    window.onclick = (e) => { if(e.target == modal) modal.style.display = "none"; };
-
-    async function initForm() {
-        const { data: kayitlar } = await _supabase.from('kayitlar').select('oturum_1_atolye, oturum_2_atolye');
-        const s1 = document.getElementById('oturum_1'); const s2 = document.getElementById('oturum_2');
-        s1.innerHTML = s2.innerHTML = '<option value="">Seçiniz...</option>';
-        atolyeler.forEach(a => {
-            const c1 = kayitlar.filter(k => k.oturum_1_atolye === a).length;
-            const c2 = kayitlar.filter(k => k.oturum_2_atolye === a).length;
-            s1.appendChild(optionOlustur(a, c1)); s2.appendChild(optionOlustur(a, c2));
-        });
-    }
-
-    function optionOlustur(n, c) {
-        const o = document.createElement('option'); o.value = n;
-        o.textContent = c >= KONTENJAN_LIMIT ? `${n} (DOLDU)` : `${n} (Kalan: ${KONTENJAN_LIMIT - c})`;
-        if (c >= KONTENJAN_LIMIT) o.disabled = true;
-        return o;
-    }
-
-    async function pdfIndir(v) {
-    document.getElementById('pdf_ad').textContent = v.p_ad_soyad;
-    document.getElementById('pdf_okul').textContent = v.p_okul_adi || '';
-    document.getElementById('pdf_o1').textContent = v.p_oturum_1_atolye || '';
-    document.getElementById('pdf_o2').textContent = v.p_oturum_2_atolye || '';
-    document.getElementById('pdf_tarih').textContent = new Date().toLocaleString('tr-TR');
-
-    var element = document.getElementById('pdf-template');
-    var wrapper = document.getElementById('pdf-wrapper');
-
-    var onceLeft = wrapper.style.left;
-    var onceTop = wrapper.style.top;
-    var oncePosition = wrapper.style.position;
-    var onceZIndex = wrapper.style.zIndex;
-    var onceOpacity = wrapper.style.opacity;
-    var oncePointerEvents = wrapper.style.pointerEvents;
-
-    wrapper.style.position = 'fixed';
-    wrapper.style.left = '0';
-    wrapper.style.top = '0';
-    wrapper.style.zIndex = '-1';
-    wrapper.style.opacity = '0';
-    wrapper.style.pointerEvents = 'none';
-
-    await new Promise(function(r) { requestAnimationFrame(r); });
-
-    try {
-        var canvas = await html2canvas(element, {
-            scale: 1,
-            useCORS: true,
-            logging: false,
-            windowWidth: 794,
-            scrollX: 0,
-            scrollY: 0
-        });
-
-        var cw = canvas.width;
-        var ch = canvas.height;
-        var imgData = canvas.toDataURL('image/jpeg', 0.98);
-
-        var pxToMm = 25.4 / 96;
-        var imgWmm = cw * pxToMm;
-        var imgHmm = ch * pxToMm;
-
-        var pageWmm = 210;
-        var pageHmm = 297;
-        var marginMm = 10;
-        var maxWmm = pageWmm - 2 * marginMm;
-        var maxHmm = pageHmm - 2 * marginMm;
-
-        var scale = Math.min(maxWmm / imgWmm, maxHmm / imgHmm, 1);
-        var finalWmm = imgWmm * scale;
-        var finalHmm = imgHmm * scale;
-        var xMm = (pageWmm - finalWmm) / 2;
-        var yMm = (pageHmm - finalHmm) / 2;
-
-        var doc = new jspdf.jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-        doc.addImage(imgData, 'JPEG', xMm, yMm, finalWmm, finalHmm);
-        doc.save('Kayit_' + (v.p_ad_soyad || 'belge') + '.pdf');
-    } finally {
-        wrapper.style.position = oncePosition;
-        wrapper.style.left = onceLeft;
-        wrapper.style.top = onceTop;
-        wrapper.style.zIndex = onceZIndex;
-        wrapper.style.opacity = onceOpacity;
-        wrapper.style.pointerEvents = oncePointerEvents;
-    }
-}
-
-    document.getElementById('workshopForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const errorBox = document.getElementById('error-message');
-        const btn = document.getElementById('submitBtn');
-        const kvkk = document.getElementById('kvkk_onay');
-        
-        const inputs = {
-            okul: document.getElementById('okul_adi'),
-            ad: document.getElementById('ad_soyad'),
-            brans: document.getElementById('brans'),
-            telefon: document.getElementById('telefon'),
-            o1: document.getElementById('oturum_1'),
-            o2: document.getElementById('oturum_2')
-        };
-
-        let isValid = true;
-        errorBox.style.display = "none";
-
-        // 1. Boş Alan Kontrolü
-        Object.values(inputs).forEach(i => {
-            if(!i.value || i.value.trim() === "") { i.classList.add('field-error'); isValid = false; }
-            else { i.classList.remove('field-error'); }
-        });
-
-        if (!isValid) {
-            errorBox.textContent = "Lütfen tüm alanları doldurunuz.";
-            errorBox.style.display = "block";
-            return;
-        }
-
-        // 2. KVKK Onay Kontrolü (İstediğin Kritik Kısım)
-        if (!kvkk.checked) {
-            errorBox.textContent = "Lütfen devam etmek için KVKK metnini onaylayınız.";
-            errorBox.style.display = "block";
-            return;
-        }
-
-        btn.disabled = true; btn.textContent = "Kaydediliyor...";
-        const v = {
-            p_okul_adi: inputs.okul.value,
-            p_ad_soyad: inputs.ad.value,
-            p_brans: inputs.brans.value,
-            p_telefon: inputs.telefon.value,
-            p_oturum_1_atolye: inputs.o1.value,
-            p_oturum_2_atolye: inputs.o2.value
-        };
-
-        try {
-            const { data, error } = await _supabase.rpc('kayit_olustur', v);
-            if (error) throw error;
-            if (data.startsWith('Hata')) {
-                errorBox.textContent = data; errorBox.style.display = "block";
-                await initForm(); btn.disabled = false; btn.textContent = "Kaydı Tamamla";
-            } else {
-                alert("Kayıt Başarılı! Belgeniz indiriliyor. Bilgisayardan giriş yaptıysanız indirilenler klasöründen, Cep telefonundan giriş yaptıysanız belgenize indirilenler klasöründen veya google chrome >> indirilenler sekmesinden belgenize ulaşabilirsiniz.");
-                await pdfIndir(v);
-                setTimeout(() => location.reload(), 2000);
-            }
-        } catch (err) { alert("Hata: " + err.message); btn.disabled = false; btn.textContent = "Kaydı Tamamla"; }
-    });
-
-    initForm();
-</script>
 </body>
 </html>

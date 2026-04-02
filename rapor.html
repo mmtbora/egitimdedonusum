@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atölye Kayıt Raporu | Eğitimde Dönüşüm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-soft: #eef2ff;
+            --accent: #7c3aed;
+            --bg: #f0f4f8;
+            --bg-mesh: radial-gradient(1200px 600px at 10% -10%, rgba(79, 70, 229, 0.12), transparent 50%),
+                        radial-gradient(900px 500px at 100% 0%, rgba(124, 58, 237, 0.08), transparent 45%),
+                        linear-gradient(180deg, #f8fafc 0%, #eef2f6 100%);
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --muted: #64748b;
+            --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+            --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04);
+            --shadow-card: 0 4px 6px rgba(15, 23, 42, 0.04), 0 12px 32px rgba(79, 70, 229, 0.08);
+            --radius: 14px;
+            --radius-sm: 10px;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-mesh);
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px 16px 40px;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        .page {
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 28px;
+            padding: 8px 0 4px;
+        }
+        .page-header h1 {
+            margin: 0 0 6px;
+            font-size: clamp(1.35rem, 4vw, 1.75rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 22px;
+            padding: 16px 20px;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        button {
+            padding: 11px 22px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        button:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+        }
+        button:active:not(:disabled) { transform: translateY(0); }
+        button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        button:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+        .summary {
+            margin-bottom: 28px;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, var(--card) 0%, var(--primary-soft) 100%);
+            border: 1px solid rgba(79, 70, 229, 0.15);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .summary-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .summary-num {
+            font-size: clamp(2rem, 6vw, 2.75rem);
+            font-weight: 800;
+            line-height: 1;
+            color: var(--primary);
+            letter-spacing: -0.03em;
+        }
+        #errorBox {
+            margin-bottom: 20px;
+            padding: 14px 18px;
+            background: linear-gradient(135deg, #fef2f2 0%, #fff1f2 100%);
+            border: 1px solid #fecaca;
+            border-radius: var(--radius-sm);
+            color: #b91c1c;
+            display: none;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+        }
+        .workshop-block {
+            margin-bottom: 26px;
+            background: var(--card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+        .workshop-title {
+            padding: 16px 20px;
+            font-weight: 700;
+            font-size: 14px;
+            text-align: center;
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary) 0%, #6366f1 50%, var(--accent) 100%);
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            line-height: 1.45;
+            letter-spacing: -0.01em;
+        }
+        .sessions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+        }
+        .session-panel {
+            flex: 1 1 320px;
+            min-width: 0;
+            border-right: 1px solid var(--border);
+        }
+        .session-panel:first-child { background: linear-gradient(180deg, #fafbff 0%, #fff 40%); }
+        .session-panel:last-child { background: linear-gradient(180deg, #f8fafc 0%, #fff 40%); }
+        .session-panel:last-child { border-right: none; }
+        @media (max-width: 720px) {
+            .session-panel {
+                flex: 1 1 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            .session-panel:last-child { border-bottom: none; }
+        }
+        .session-head {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 12px 14px;
+            font-weight: 700;
+            font-size: 13px;
+            text-align: center;
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.85);
+            border-bottom: 1px solid var(--border);
+        }
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+        .session-badge.empty {
+            background: #f1f5f9;
+            color: var(--muted);
+        }
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 10px 12px 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 12.5px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        th, td {
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            padding: 10px 10px;
+            text-align: left;
+            vertical-align: top;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+        }
+        th:last-child, td:last-child { border-right: none; }
+        tbody tr:last-child td { border-bottom: none; }
+        thead th {
+            background: linear-gradient(180deg, #f1f5f9 0%, #e8eef5 100%);
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #475569;
+            white-space: nowrap;
+        }
+        tbody tr:nth-child(odd) td { background: #fff; }
+        tbody tr:nth-child(even) td { background: #f8fafc; }
+        tbody tr:hover td {
+            background: #eef2ff !important;
+            transition: background 0.12s ease;
+        }
+        td.num {
+            text-align: center;
+            width: 44px;
+            max-width: 52px;
+            white-space: nowrap;
+            font-weight: 700;
+            color: var(--primary);
+            font-variant-numeric: tabular-nums;
+        }
+        .empty-note {
+            padding: 28px 16px;
+            color: var(--muted);
+            font-size: 13px;
+            text-align: center;
+            font-style: italic;
+            background: #fafafa !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="page-header">
+            <h1>EĞİTİMDE DÖNÜŞÜM</h1>
+            <p>Atölye kayıt dökümü</p>
+        </header>
+
+        <div class="toolbar">
+            <button type="button" id="btnYukle">Verileri yenile</button>
+        </div>
+
+        <div id="errorBox"></div>
+
+        <div class="summary" id="summaryBox" style="display:none;">
+            <span class="summary-text">Tüm atölyeler için toplam kayıt</span>
+            <span class="summary-num" id="toplamSayi">0</span>
+        </div>
+
+        <div id="raporRoot"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        var SUPABASE_URL = 'https://qpioyavodwtdlffhsceg.supabase.co';
+        var SUPABASE_ANON_KEY = 'sb_publishable_F3HKCA2SsrIYg099dS5AxA_TitAkz-j';
+        var atolyeler = [
+            '1-Eğitimde Duygusal Bağın İnşası (Sadece Bayan Öğretmenler İçindir)',
+            '2-Öğretmenin Tasarım Asistanı: CANVA',
+            '3-Yeni Nesil Öğrenciler ve Modern Öğretmenlik Yaklaşımları',
+            '4-Etkinliklerle Siyer Öğretimi Yöntemleri Teknikleri (Sadece Bayan Öğretmenler İçindir)',
+            '5-Eğitimcinin İmaj Yönetimi',
+            '6-Oyun ve Etkinliklerle Din Öğretimi (Sadece Bayan Öğretmenler İçindir)',
+            '7-Etkili İletişimde Beden Dili',
+            '8-Eğitim Öğretimde Akıl Oyunları Kullanımı',
+            '9-Eğitim Öğretimde Yapay Zeka Kullanımı',
+            '10-Öğretmenler İçin Tükenmişlikten Güçlenmeye'
+        ];
+
+        function escapeHtml(s) {
+            if (s == null || s === '') return '';
+            var d = document.createElement('div');
+            d.textContent = String(s);
+            return d.innerHTML;
+        }
+
+        /** Raporda kısaltılmış okul adları (veritabanı değişmez).
+            ALİYA/ALIYA; Ahmet + Erdoğan/erdogan birlikte; Şehit/Halil/İbrahim (I/ı). */
+        function okulRaporIcin(okul) {
+            if (okul == null || String(okul).trim() === '') return '';
+            var t = String(okul).toLocaleLowerCase('tr-TR');
+            var foldI = t.replace(/ı/g, 'i');
+            var fold = foldI.replace(/ğ/g, 'g');
+            if (foldI.indexOf('aliya') !== -1) {
+                return 'Aliya İzzetbegoviç Kız AİHL';
+            }
+            if (fold.indexOf('ahmet') !== -1 && fold.indexOf('erdogan') !== -1) {
+                return 'Kapt. A. Erd. AİHL';
+            }
+            if (t.indexOf('şehit') !== -1 || t.indexOf('halil') !== -1 || foldI.indexOf('ibrahim') !== -1) {
+                return 'ŞHİY AİHL';
+            }
+            return String(okul);
+        }
+
+        function buildSessionTable(rows, baslik) {
+            var n = rows.length;
+            var badgeClass = n > 0 ? 'session-badge' : 'session-badge empty';
+            var badgeText = n > 0 ? (n + ' kayıt') : 'Kayıt yok';
+            var html = '<div class="session-panel">';
+            html += '<div class="session-head"><span>' + escapeHtml(baslik) + '</span><span class="' + badgeClass + '">' + badgeText + '</span></div>';
+            html += '<div class="table-wrap"><table><thead><tr>';
+            html += '<th class="num">Sıra no</th><th>Okul adı</th><th>Ad Soyad</th><th>Branş</th><th>Telefon</th>';
+            html += '</tr></thead><tbody>';
+            if (rows.length === 0) {
+                html += '<tr><td colspan="5" class="empty-note">Bu oturumda kayıt yok.</td></tr>';
+            } else {
+                for (var i = 0; i < rows.length; i++) {
+                    var r = rows[i];
+                    html += '<tr>';
+                    html += '<td class="num">' + (i + 1) + '</td>';
+                    html += '<td>' + escapeHtml(okulRaporIcin(r.okul_adi)) + '</td>';
+                    html += '<td>' + escapeHtml(r.ad_soyad) + '</td>';
+                    html += '<td>' + escapeHtml(r.brans) + '</td>';
+                    html += '<td>' + escapeHtml(r.telefon) + '</td>';
+                    html += '</tr>';
+                }
+            }
+            html += '</tbody></table></div></div>';
+            return html;
+        }
+
+        async function yukle() {
+            var errEl = document.getElementById('errorBox');
+            var root = document.getElementById('raporRoot');
+            var btn = document.getElementById('btnYukle');
+
+            errEl.style.display = 'none';
+            errEl.textContent = '';
+
+            if (typeof window.supabase === 'undefined') {
+                errEl.textContent = 'Supabase yüklenemedi. Sayfayı Vercel üzerinden veya yerel sunucudan (http://localhost) açın.';
+                errEl.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Yükleniyor...';
+            root.innerHTML = '';
+
+            try {
+                var client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                var res = await client
+                    .from('kayitlar')
+                    .select('okul_adi, ad_soyad, brans, telefon, oturum_1_atolye, oturum_2_atolye');
+
+                if (res.error) throw res.error;
+
+                var kayitlar = res.data || [];
+
+                document.getElementById('toplamSayi').textContent = String(kayitlar.length);
+                document.getElementById('summaryBox').style.display = 'block';
+
+                var html = '';
+                for (var a = 0; a < atolyeler.length; a++) {
+                    var ad = atolyeler[a];
+                    var o1 = kayitlar.filter(function (k) { return k.oturum_1_atolye === ad; });
+                    var o2 = kayitlar.filter(function (k) { return k.oturum_2_atolye === ad; });
+
+                    html += '<section class="workshop-block">';
+                    html += '<div class="workshop-title">' + escapeHtml(ad) + '</div>';
+                    html += '<div class="sessions">';
+                    html += buildSessionTable(o1, '1. oturum');
+                    html += buildSessionTable(o2, '2. oturum');
+                    html += '</div></section>';
+                }
+
+                root.innerHTML = html;
+            } catch (e) {
+                errEl.textContent = 'Hata: ' + (e.message || String(e));
+                errEl.style.display = 'block';
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Verileri yenile';
+        }
+
+        document.getElementById('btnYukle').addEventListener('click', yukle);
+        document.addEventListener('DOMContentLoaded', function () {
+            yukle();
+        });
+    </script>
+</body>
+</html>
